@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import Cadastro from "./components/pages/Cadastro/Cadastro";
+import Listagem from "./components/pages/Listagem/Listagem";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface Produto {
+  nome: string;
+  descricao: string;
+  valor: number;
+  disponivel: string;
 }
 
-export default App
+const App: React.FC = () => {
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [pagina, setPagina] = useState<"cadastro" | "listagem">("cadastro");
+
+  const handleCadastro = (produto: Produto) => {
+    setProdutos((prev) => [...prev, produto]);
+    setPagina("listagem");
+  };
+
+  return (
+    <div>
+      {pagina === "cadastro" && <Cadastro onSubmit={handleCadastro} />}
+      {pagina === "listagem" && (
+        <Listagem produtos={produtos} voltar={() => setPagina("cadastro")} />
+      )}
+    </div>
+  );
+};
+
+export default App;
